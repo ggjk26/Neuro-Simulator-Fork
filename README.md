@@ -1,12 +1,12 @@
 # Neuro Simulator
 
+**该Fork开发周期极不稳定且会伴随着极大的风险，如果想要使用更加稳定/便捷的版本请移步主项目。**
+*该项目为MohaMaster的Neruo-Simulator的第三方分支版本，仅作为实验性学习*
+
 ***关注Vedal喵，关注Vedal谢谢喵***
 
 *本临时README和所有代码均由AI生成*
 
-## 虽然还是有不少点子，但是近段时间有点忙，暂缓开发💩
-
-## 以及由于把main当debug分支用的坏习惯，当前main搞了一半，只有release可完整运行
 
 Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。  
 它通过使用自带的有记忆 Agent，~~也可调用 Letta（一个为 LLM 添加自主记忆功能的项目）~~，以及相同构造的 Chatbot Agent 作为虚拟观众，模拟一场 Neuro-sama 的 Just Chatting 直播。  
@@ -36,7 +36,7 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 1.  **准备外部服务**：确保你拥有必要的 API 密钥，包括 LLM（Gemini/OpenAI）和 Azure TTS；~~如果使用 Letta，也请注册好相关的 API 。~~
 2.  **安装服务端**：已上传至 PyPi 作为可用 pip 安装的软件包，你可以用任何一个 pip 安装到全局或 venv 中。
     ```bash
-    pip install neuro-simulator
+    目前该分支暂时弃用pip/pipx安装至python渠道。
     ```
     推荐使用 pipx，可以在不更改系统 Python 依赖的情况下直接安装为全局软件。
 
@@ -239,10 +239,9 @@ Neuro-Simulator/
   - [ ] 基于静态立绘制作的简易Live2D，能动就行
   - [x] 目前不会考虑语音输入
 
-    > 除非你和 Neuro 在直播中有过语音联动，那我可以叫上 Gemini 一起，给你单独定制一个（
 
   - [ ] 等待补充…
 
 ## 贡献
 
-欢迎提交 Issue 和 Pull Request 来帮助改进项目，虽然大概率会是 Gemini 2.5 或者 Qwen Coder 来处理🤣
+该fork仅使用codex开发，开发周期不稳定。
