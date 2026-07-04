@@ -20,9 +20,9 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 
 ### 预览
 
-*这图是较旧版本的，现在小牛已经和现实中一样换新家了*
+*这图是较旧版本的，现在小牛已经和现实中一样换新家了（同样的，可能不适用于该分支）*
 
-演示视频：[哔哩哔哩](https://www.bilibili.com/video/BV1RPsqzrEvS)
+演示视频（可能不适用于该分支）：[哔哩哔哩](https://www.bilibili.com/video/BV1RPsqzrEvS)
 
 <img src="docs/assets/start.gif" width="500" />
 
@@ -35,11 +35,10 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 ## 快速开始
 
 1.  **准备外部服务**：确保你拥有必要的 API 密钥，包括 LLM（Gemini/OpenAI）和 Azure TTS；~~如果使用 Letta，也请注册好相关的 API 。~~
-2.  **安装服务端**：已上传至 PyPi 作为可用 pip 安装的软件包，你可以用任何一个 pip 安装到全局或 venv 中。
+2.  **安装服务端**：
     ```bash
     目前该分支暂时弃用pip/pipx安装至python渠道。
     ```
-    推荐使用 pipx，可以在不更改系统 Python 依赖的情况下直接安装为全局软件。
 
 3.  **运行服务端**：
     ```bash
