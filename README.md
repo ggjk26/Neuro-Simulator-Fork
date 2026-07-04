@@ -190,7 +190,7 @@ Neuro-Simulator/
         - [x] 开场上升
         - [ ] 表情差分
         - [x] 旋转缩放
-        - [ ] 自然晃动
+        - [x] 自然晃动
         - [ ] 音效播放
       - [ ] Evil 立绘
       - [x] 醒目留言 Highlight Messages Overlay
@@ -209,7 +209,7 @@ Neuro-Simulator/
     - [x] 可托管的 Web 静态页面
     - [x] Windows 客户端
       - [x] 基于 Tauri
-      - [ ] 原生
+      - [x] 原生（Win32/WebView2 基础客户端）
     - [x] Linux 客户端
       - [x] 基于 Tauri
       - [ ] 原生
