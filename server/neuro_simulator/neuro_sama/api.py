@@ -14,6 +14,7 @@ from openai import AsyncOpenAI
 from .config import Config
 from .context_builder import ContextBuilder
 from .json_stream_parser import StreamingJSONParser
+from .neuro_sdk_adapter import handle_neuro_sdk_websocket
 
 
 router = APIRouter()
@@ -256,6 +257,14 @@ async def websocket_chat_endpoint(websocket: WebSocket):
     config = websocket.app.state.config
 
     await handle_websocket_communication(websocket, client, config)
+
+
+@router.websocket("/ws/neuro-sdk")
+async def websocket_neuro_sdk_endpoint(websocket: WebSocket):
+    """VedalAI Neuro SDK compatible WebSocket endpoint."""
+    client = websocket.app.state.openai_client
+    config = websocket.app.state.config
+    await handle_neuro_sdk_websocket(websocket, client, config)
 
 
 @router.websocket("/ws/admin")

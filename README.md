@@ -1,90 +1,245 @@
 # Neuro Simulator
 
-**该Fork开发周期极不稳定且会伴随着极大的风险，如果想要使用更加稳定/便捷的版本请移步主项目。**
+> **实验性 Fork 警告**：该分支开发周期不稳定，接口、配置和部署方式都可能变动。如果你需要稳定版本，请优先使用主项目。本 Fork 主要用于学习、实验和快速验证新功能。
 
-*该项目为MohaMaster的Neruo-Simulator的第三方分支版本，仅作为实验性学习*
+Neuro Simulator 是一个模拟 Neuro-sama Just Chatting 直播的项目。它包含服务端、Web 客户端、Web 控制面板、Tauri 客户端、Win32/WebView2 原生客户端骨架，以及基础的 Official Neuro SDK WebSocket 兼容层。
 
-***关注Vedal喵，关注Vedal谢谢喵***
+## 当前状态概览
 
-*本临时README和所有代码均由AI生成*
+- **推荐启动方式**：`neuro-launcher`，或源码目录下的 `scripts/start.sh` / `scripts/start.ps1`。
+- **Web 控制面板**：由 Vedal Studio 服务承载，用于编辑配置、查看日志、管理 Agent 和热重载。
+- **Web 客户端**：仿 Twitch 直播间界面，支持直播画面、聊天室、字幕、Highlight Message、离线页等。
+- **LLM 支持**：使用 OpenAI-compatible Chat Completions 接口；可接 OpenAI、兼容云服务，也可接本地 Ollama / LM Studio / llama.cpp server 等本地大模型服务。
+- **TTS 支持**：当前主要支持 Azure TTS；即使使用本地 LLM，语音合成仍需配置 Azure TTS，除非你只使用不需要 TTS 的调试链路。
+- **Official Neuro SDK 兼容**：Neuro Sama 模块提供 `ws://<host>:<port>/ws/neuro-sdk` 基础适配端点，支持动作注册和强制动作选择流程。
+- **Windows 原生客户端**：`client-native/windows-win32` 提供 Win32 + WebView2 客户端骨架；它承载现有 Web UI，不依赖 Tauri。
 
+## 功能亮点
 
-Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。  
-它通过使用自带的有记忆 Agent，~~也可调用 Letta（一个为 LLM 添加自主记忆功能的项目）~~，以及相同构造的 Chatbot Agent 作为虚拟观众，模拟一场 Neuro-sama 的 Just Chatting 直播。  
-它能生成实时的虚拟聊天内容，并通过 TTS 合成语音，提供沉浸式的 Twitch vedal987 频道观看体验。  
+- **多客户端连接与广播**：服务端可向多个客户端推送直播阶段、聊天、字幕和互动消息。
+- **配置热重载**：通过 Web 控制面板编辑配置并重载服务。
+- **内建记忆 Agent**：Neuro Agent 支持系统提示、核心记忆、临时记忆和工具调用流程。
+- **仿 Twitch 前端**：包含直播页面、离线主播页、聊天侧栏、直播信息、字幕和互动覆盖层。
+- **本地 LLM 友好**：配置模板默认包含 Ollama 的 OpenAI-compatible 示例，API key 可为空或使用占位值。
 
-## 特性
+## 目录结构
 
-和其他类似的 AI Vtuber 项目不同，本项目旨在尽可能模拟 Neuro-sama 于 Twitch 上的 Tuesday Stream，因此在 Vtuber 部分不会有太多的自定义部分，也不会考虑引入 Neuro/Evil 以外的 Live2D。  
-后续有低成本低性能方法实现 Evil 音色模仿的时候，可能加入 Evil Neuro。
-
-### 预览
-
-*这图是较旧版本的，现在小牛已经和现实中一样换新家了*
-
-演示视频：[哔哩哔哩](https://www.bilibili.com/video/BV1RPsqzrEvS)
-
-<img src="docs/assets/start.gif" width="500" />
-
-### 核心亮点
-
-- **多客户端支持**：支持多个客户端连接，实时广播内容。
-- **配置热重载**：通过 Web 控制面板实时修改和热重载配置。
-- ~~**双 Agent 模式**：支持 Letta Agent 和内建 Agent，提供更多自定义选项~~ 对 Letta Agent 的支持暂时下线，后续有缘再见。
-
-## 快速开始
-
-1.  **准备外部服务**：确保你拥有必要的 API 密钥，包括 LLM（Gemini/OpenAI）和 Azure TTS；~~如果使用 Letta，也请注册好相关的 API 。~~
-2.  **安装服务端**：已上传至 PyPi 作为可用 pip 安装的软件包，你可以用任何一个 pip 安装到全局或 venv 中。
-    ```bash
-    目前该分支暂时弃用pip/pipx安装至python渠道。
-    ```
-    推荐使用 pipx，可以在不更改系统 Python 依赖的情况下直接安装为全局软件。
-
-3.  **运行服务端**：
-    ```bash
-    neuro
-    ```
-    现在无需手动填写 `config.yaml`，程序在启动时会自动创建一份包含默认设置的配置文件，只需在管理面板中填写和为 Agent 分配 API 服务商即可。
-      - 不指定 `--dir, -D` 则自动创建和默认使用 `~/.config/neuro-simulator/` 作为工作目录。
-      - 程序会在工作目录下自动生成文件夹结构，拷贝需要的文件到目录内，保持程序包本体只读。
-
-    程序启动后，如果工作正常，会默认在 `http://127.0.0.1:8000` 提供对外服务，你可以在设置中修改这个端口。
-
-4.  **打开管理面板**：现在程序已经内置管理面板，直接在浏览器中打开 `http://127.0.0.1:8000/dashboard/` 即可，内置面板会自动连接到服务端。
-
-    **配置流程**：
-      1. 在管理面板中打开“配置”页面。
-      2. 在“LLM服务商”中添加一个以上的选项。
-      3. 在“TTS服务商”中添加一个以上的 Azure TTS 服务。
-      4. 在“Neuro”中分配一个 LLM 服务商和一个 TTS 服务商。
-      5. 在“Chatbot”中分配一个 LLM 服务商。
-
-5.  **打开客户端**：现在程序已经内置客户端，在浏览器中访问 `<http协议>://<服务端地址>/` 即可。  
-    但是这种方式下自动从哔哩哔哩获取最近回放的功能似乎不工作，需要对哔哩哔哩 API 进行反代。如果你安装了 nodejs，则可以使用 npm 运行开发服务器的方式使用客户端。
-
-更多更复杂或者更简单的使用方式，请参见三个部分的详细文档
-
-## 项目结构（稍微过时，待更新）
-
-```
-Neuro-Simulator/
-├── server/           # 服务端
-├── client/           # 客户端
-├── dashboard_web/    # Web控制面板
-├── docs/             # 文档和示例文件
-│   ├── letta_agents_example/  # Letta Agent 模板示例
-│   ├── assets/       # README中使用的媒体文件
-│   └── working_dir_example/   # 工作目录示例
-└── README.md         # 项目说明文档
+```text
+Neuro-Simulator-Fork/
+├── server/                         # Python 服务端与 Agent 模块
+│   └── neuro_simulator/
+│       ├── launcher.py             # 便捷启动器入口
+│       ├── vedal_studio/           # Web 控制面板承载与配置管理
+│       ├── neuro_sama/             # Neuro Agent、API、Neuro SDK 适配
+│       └── working_dir/            # 首次运行复制到用户目录的默认配置/记忆模板
+├── client/                         # 仿 Twitch Web 客户端与 Tauri 客户端
+├── dashboard/                      # Vue/Vuetify Web 控制面板
+├── client-native/windows-win32/     # Win32 + WebView2 原生 Windows 客户端骨架
+├── scripts/                        # 源码运行启动脚本
+├── tests/                          # Python 单元测试
+├── docs/                           # 示例和 README 媒体资源
+└── pyproject.toml                  # Python 包配置与命令入口
 ```
 
-## 详细文档
+## 快速开始：推荐流程
 
-有关安装、配置和使用的详细信息，请参阅详细的 README 文件：
+### 1. 准备环境
 
-- [服务端 README](server/README.md)
-- [客户端 README](client/README.md)
+建议使用 Python 3.10+。前端开发或重新构建 Web UI 时还需要 Node.js / npm；仅运行已构建资源时不一定需要 Node.js。
+
+```bash
+python -m venv .venv
+source .venv/bin/activate      # Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install -e .
+```
+
+如果只想按服务端依赖运行，也可以使用：
+
+```bash
+python -m pip install -r server/requirements.txt
+```
+
+### 2. 启动 Web UI 与控制面板
+
+安装包后推荐使用：
+
+```bash
+neuro-launcher
+```
+
+源码目录下也可以直接运行脚本：
+
+```bash
+scripts/start.sh --port 8000
+# Windows PowerShell
+./scripts/start.ps1 --port 8000
+```
+
+常用参数：
+
+```bash
+neuro-launcher --dir ~/.config/neuro-simulator --host 127.0.0.1 --port 8000
+neuro-launcher --no-browser
+neuro-launcher --reload
+```
+
+启动器会创建/修复工作目录，读取 `config.json`，启动 Vedal Studio Web UI，并默认打开浏览器。
+
+### 3. 打开控制面板并配置服务
+
+默认访问地址：
+
+- Web 控制面板 / 内置 Web UI：`http://127.0.0.1:8000/`
+- Neuro Sama 模块默认端口：`127.0.0.1:8001`
+
+首次运行会在工作目录创建配置，例如：
+
+```text
+~/.config/neuro-simulator/config.json
+~/.config/neuro-simulator/neuro_sama/prompts/neuro_prompt.txt
+~/.config/neuro-simulator/neuro_sama/memory/*.json
+```
+
+在控制面板中通常需要确认或填写：
+
+1. `general.llm_services`：添加或编辑 LLM 服务。
+2. `general.tts_services`：添加或编辑 Azure TTS 服务。
+3. `neuro_sama.llm_service_id`：选择要给 Neuro Agent 使用的 LLM 服务。
+4. `neuro_sama.tts_service_id`：选择要给 Neuro Agent 使用的 TTS 服务。
+5. 保存配置后重启或热重载相关模块。
+
+## 本地 LLM 配置
+
+本项目通过 OpenAI-compatible Chat Completions 客户端调用 LLM，所以本地服务只要提供 `/v1/chat/completions` 兼容接口即可。
+
+### Ollama 示例
+
+1. 启动 Ollama 并拉取模型：
+
+```bash
+ollama pull llama3.1:8b
+ollama serve
+```
+
+2. 在 `config.json` 或控制面板中配置：
+
+```json
+{
+  "id": "local_ollama",
+  "name": "Local Ollama",
+  "provider": "local_openai",
+  "url": "http://127.0.0.1:11434/v1",
+  "model": "llama3.1:8b",
+  "key": "ollama"
+}
+```
+
+3. 将 `neuro_sama.llm_service_id` 设置为 `local_ollama`。
+
+> 说明：Ollama、LM Studio、llama.cpp server 等本地服务通常不校验 API key。本项目现在允许 LLM service 的 `key` 留空；运行时会自动使用 `OPENAI_API_KEY` 环境变量或 `not-needed` 占位值。
+
+### LM Studio / llama.cpp server 示例
+
+只需要把 `url` 改为对应服务的 OpenAI-compatible 地址，并填写该服务暴露的模型名，例如：
+
+```json
+{
+  "id": "local_lmstudio",
+  "name": "Local LM Studio",
+  "provider": "local_openai",
+  "url": "http://127.0.0.1:1234/v1",
+  "model": "local-model",
+  "key": ""
+}
+```
+
+## Azure TTS 配置
+
+当前语音合成主要依赖 Azure TTS。示例结构如下：
+
+```json
+{
+  "id": "azure_default",
+  "name": "Azure TTS",
+  "provider": "azure",
+  "key": "<your-azure-speech-key>",
+  "region": "eastus",
+  "timeout": 10
+}
+```
+
+然后将 `neuro_sama.tts_service_id` 设置为该服务的 `id`。
+
+## Official Neuro SDK 兼容端点
+
+Neuro Sama 模块提供基础兼容端点：
+
+```text
+ws://127.0.0.1:8001/ws/neuro-sdk
+```
+
+已支持的基础命令：
+
+- `startup`
+- `context`
+- `actions/register`
+- `actions/unregister`
+- `actions/force`
+- `action/result`
+
+典型流程是：外部集成连接该 WebSocket，发送 `startup`，注册可用动作；当它发送 `actions/force` 时，模拟器会根据上下文调用当前 LLM，在已注册动作里选择一个并返回 `action` 消息。
+
+## 客户端运行方式
+
+### Web 客户端
+
+启动 Vedal Studio 后，直接打开：
+
+```text
+http://127.0.0.1:8000/
+```
+
+### Web 客户端开发模式
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+### Dashboard 开发模式
+
+```bash
+cd dashboard
+npm install
+npm run dev
+```
+
+### Windows 原生客户端骨架
+
+Win32/WebView2 客户端位于：
+
+```text
+client-native/windows-win32/
+```
+
+构建需要 Windows、Visual Studio C++ 工具链、CMake 和 WebView2 Runtime。详见 `client-native/windows-win32/README.md`。
+
+## 常见问题
+
+### `neuro`、`vedal` 和 `neuro-launcher` 有什么区别？
+
+- `neuro-launcher`：推荐入口，启动 Vedal Studio Web UI，并默认打开浏览器。
+- `vedal`：直接启动 Vedal Studio 中央管理服务。
+- `neuro`：直接启动 Neuro Sama 模块，通常用于模块级调试，不是普通用户的推荐入口。
+
+### 使用本地 LLM 还需要 Azure TTS 吗？
+
+需要。LLM 和 TTS 是两套服务。本地 LLM 只负责生成文本和工具调用；如果你要在直播客户端听到声音，仍需配置 Azure TTS，或后续自行接入其他 TTS 实现。
+
+### 为什么本地 LLM 的 API key 可以为空？
+
+很多本地 OpenAI-compatible 服务不校验 API key。为了兼容这些服务，配置层允许 `key` 为空，并在运行时使用 `OPENAI_API_KEY` 环境变量或 `not-needed` 作为占位值。
 
 ## 开发计划和已实现功能
 
@@ -107,7 +262,7 @@ Neuro-Simulator/
           - [ ] 播放音效
         - [ ] 模块化热插拔工具
         - [ ] 连接到 MCP 服务器
-        - [ ] 兼容 Offical [Neuro SDK](https://github.com/VedalAI/neuro-sdk)
+        - [x] 兼容 Offical [Neuro SDK](https://github.com/VedalAI/neuro-sdk)（基础 WebSocket 适配）
     - [ ] 拉起 Evil Agent 并进行对话
   - [ ] Evil Agent 模块，~~卖掉了~~ 待 Neuro Agent 完善、有低成本低性能方法实现 Evil 音色模仿的时候加入
   - [ ] 对 Neuroverse 更多成员的 AI Agent 复现，进而允许 Neuro Agent 向其发送 DM（语音聊天可能不太现实）
@@ -157,7 +312,7 @@ Neuro-Simulator/
     - [x] 醒目留言 Highlight Messages
     - [x] 直播标题和标签等信息
   - [ ] 在非直播的空闲时间自动获取真实世界中 Neuro 的近期直播内容，更新完善记忆内容（不是微调训练）
-  - [ ] 对 Ollama 等本地 LLM 的优化
+  - [x] 支持 Ollama / LM Studio / llama.cpp server 等本地 OpenAI-compatible LLM
   - [x] 服务端托管管理面板
     - [x] Web 控制面板
     - [ ] 使用 PyInquiry 的命令行面板
@@ -190,7 +345,7 @@ Neuro-Simulator/
         - [x] 开场上升
         - [ ] 表情差分
         - [x] 旋转缩放
-        - [ ] 自然晃动
+        - [x] 自然晃动
         - [ ] 音效播放
       - [ ] Evil 立绘
       - [x] 醒目留言 Highlight Messages Overlay
@@ -209,7 +364,7 @@ Neuro-Simulator/
     - [x] 可托管的 Web 静态页面
     - [x] Windows 客户端
       - [x] 基于 Tauri
-      - [ ] 原生
+      - [x] 原生（Win32/WebView2 基础客户端）
     - [x] Linux 客户端
       - [x] 基于 Tauri
       - [ ] 原生
@@ -217,7 +372,7 @@ Neuro-Simulator/
       - [ ] 基于 Tauri
       - [ ] 原生
 - Web 控制面板
-  - [ ] 更加便捷的启动器/启动脚本
+  - [x] 更加便捷的启动器/启动脚本
   - [x] 指定服务端 URL 进行连接
   - [x] 直播的开始、停止、重启
   - [x] 配置的查看、编辑、热重载

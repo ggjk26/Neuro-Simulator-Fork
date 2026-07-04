@@ -62,9 +62,10 @@ class Config:
         if not tts_service:
             raise ValueError(f"TTS service with ID '{tts_service_id}' not found in general.tts_services")
 
-        # Validate LLM service configuration
-        if "key" not in llm_service or not llm_service["key"]:
-            raise ValueError(f"Missing required configuration in LLM service '{llm_service_id}': key")
+        # Validate LLM service configuration.
+        # Local OpenAI-compatible servers such as Ollama, LM Studio and llama.cpp
+        # often ignore the API key, so allow an empty key and provide a harmless
+        # placeholder for the OpenAI client.
         if "url" not in llm_service or not llm_service["url"]:
             raise ValueError(f"Missing required configuration in LLM service '{llm_service_id}': url")
         if "model" not in llm_service or not llm_service["model"]:
@@ -79,9 +80,10 @@ class Config:
             raise ValueError(f"Missing required configuration in TTS service '{tts_service_id}': timeout")
 
         # Set configuration values
-        self.OPENAI_API_KEY = llm_service["key"]
+        self.OPENAI_API_KEY = llm_service.get("key") or os.getenv("OPENAI_API_KEY") or "not-needed"
         self.OPENAI_BASE_URL = llm_service["url"]
         self.OPENAI_MODEL = llm_service["model"]
+        self.LLM_PROVIDER = llm_service.get("provider", "openai_compatible")
 
         self.AZURE_TTS_KEY = tts_service["key"]
         self.AZURE_TTS_REGION = tts_service["region"]

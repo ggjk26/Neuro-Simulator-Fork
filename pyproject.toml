@@ -32,6 +32,7 @@ dependencies = [
     "pydantic",
     "jinja2",
     "python-multipart",
+    "PyYAML",
     "mutagen",
 ]
 
@@ -42,6 +43,7 @@ Issues = "https://github.com/Moha-Master/neuro-simulator/issues"
 
 [project.scripts]
 neuro = "neuro_simulator.neuro_sama.main:main"
+neuro-launcher = "neuro_simulator.launcher:main"
 vedal = "neuro_simulator.vedal_studio.main:main"
 neuro-test = "neuro_simulator.neuro_sama.test_client:main"
 vedal-test = "neuro_simulator.vedal_studio.test_client:main"

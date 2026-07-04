@@ -4,12 +4,38 @@
       "host": "127.0.0.1",
       "port": 8000
     },
-    "llm_services": null,
-    "tts_services": null
+    "llm_services": [
+      {
+        "id": "local_ollama",
+        "name": "Local Ollama (OpenAI compatible)",
+        "provider": "local_openai",
+        "url": "http://127.0.0.1:11434/v1",
+        "model": "llama3.1:8b",
+        "key": "ollama"
+      },
+      {
+        "id": "openai_default",
+        "name": "OpenAI compatible cloud service",
+        "provider": "openai_compatible",
+        "url": "https://api.openai.com/v1",
+        "model": "gpt-4o-mini",
+        "key": ""
+      }
+    ],
+    "tts_services": [
+      {
+        "id": "azure_default",
+        "name": "Azure TTS",
+        "provider": "azure",
+        "key": "",
+        "region": "eastus",
+        "timeout": 10
+      }
+    ]
   },
   "neuro_sama": {
-    "llm_service_id": "",
-    "tts_service_id": "",
+    "llm_service_id": "local_ollama",
+    "tts_service_id": "azure_default",
     "server_settings": {
       "host": "127.0.0.1",
       "port": 8001
