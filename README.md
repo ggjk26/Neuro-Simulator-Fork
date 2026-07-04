@@ -20,9 +20,9 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 
 ### 预览
 
-*这图是较旧版本的，现在小牛已经和现实中一样换新家了*
+*这图是较旧版本的，现在小牛已经和现实中一样换新家了（同样的，可能不适用于该分支）*
 
-演示视频：[哔哩哔哩](https://www.bilibili.com/video/BV1RPsqzrEvS)
+演示视频（可能不适用于该分支）：[哔哩哔哩](https://www.bilibili.com/video/BV1RPsqzrEvS)
 
 <img src="docs/assets/start.gif" width="500" />
 
@@ -35,11 +35,10 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 ## 快速开始
 
 1.  **准备外部服务**：确保你拥有必要的 API 密钥，包括 LLM（Gemini/OpenAI）和 Azure TTS；~~如果使用 Letta，也请注册好相关的 API 。~~
-2.  **安装服务端**：已上传至 PyPi 作为可用 pip 安装的软件包，你可以用任何一个 pip 安装到全局或 venv 中。
+2.  **安装服务端**：
     ```bash
     目前该分支暂时弃用pip/pipx安装至python渠道。
     ```
-    推荐使用 pipx，可以在不更改系统 Python 依赖的情况下直接安装为全局软件。
 
 3.  **运行服务端**：
     ```bash
@@ -62,6 +61,24 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 
 5.  **打开客户端**：现在程序已经内置客户端，在浏览器中访问 `<http协议>://<服务端地址>/` 即可。  
     但是这种方式下自动从哔哩哔哩获取最近回放的功能似乎不工作，需要对哔哩哔哩 API 进行反代。如果你安装了 nodejs，则可以使用 npm 运行开发服务器的方式使用客户端。
+
+### 便捷启动器
+
+安装包后可以使用启动器自动初始化工作目录、启动内置 Web UI，并默认打开浏览器：
+
+```bash
+neuro-launcher
+```
+
+源码运行时也可以使用仓库内脚本：
+
+```bash
+scripts/start.sh --port 8000
+# Windows PowerShell
+./scripts/start.ps1 --port 8000
+```
+
+如需连接 Official Neuro SDK 兼容客户端，请连接 Neuro Sama 模块的 WebSocket 端点：`ws://<neuro-sama-host>:<port>/ws/neuro-sdk`。该端点支持 `startup`、`context`、`actions/register`、`actions/unregister`、`actions/force` 和 `action/result` 的基础流程。
 
 更多更复杂或者更简单的使用方式，请参见三个部分的详细文档
 
@@ -107,7 +124,7 @@ Neuro-Simulator/
           - [ ] 播放音效
         - [ ] 模块化热插拔工具
         - [ ] 连接到 MCP 服务器
-        - [ ] 兼容 Offical [Neuro SDK](https://github.com/VedalAI/neuro-sdk)
+        - [x] 兼容 Offical [Neuro SDK](https://github.com/VedalAI/neuro-sdk)（基础 WebSocket 适配）
     - [ ] 拉起 Evil Agent 并进行对话
   - [ ] Evil Agent 模块，~~卖掉了~~ 待 Neuro Agent 完善、有低成本低性能方法实现 Evil 音色模仿的时候加入
   - [ ] 对 Neuroverse 更多成员的 AI Agent 复现，进而允许 Neuro Agent 向其发送 DM（语音聊天可能不太现实）
@@ -190,7 +207,7 @@ Neuro-Simulator/
         - [x] 开场上升
         - [ ] 表情差分
         - [x] 旋转缩放
-        - [ ] 自然晃动
+        - [x] 自然晃动
         - [ ] 音效播放
       - [ ] Evil 立绘
       - [x] 醒目留言 Highlight Messages Overlay
@@ -209,7 +226,7 @@ Neuro-Simulator/
     - [x] 可托管的 Web 静态页面
     - [x] Windows 客户端
       - [x] 基于 Tauri
-      - [ ] 原生
+      - [x] 原生（Win32/WebView2 基础客户端）
     - [x] Linux 客户端
       - [x] 基于 Tauri
       - [ ] 原生
@@ -217,7 +234,7 @@ Neuro-Simulator/
       - [ ] 基于 Tauri
       - [ ] 原生
 - Web 控制面板
-  - [ ] 更加便捷的启动器/启动脚本
+  - [x] 更加便捷的启动器/启动脚本
   - [x] 指定服务端 URL 进行连接
   - [x] 直播的开始、停止、重启
   - [x] 配置的查看、编辑、热重载
