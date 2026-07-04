@@ -63,6 +63,24 @@ Neuro Simulator 是一个模拟 Neuro-sama 直播的项目。
 5.  **打开客户端**：现在程序已经内置客户端，在浏览器中访问 `<http协议>://<服务端地址>/` 即可。  
     但是这种方式下自动从哔哩哔哩获取最近回放的功能似乎不工作，需要对哔哩哔哩 API 进行反代。如果你安装了 nodejs，则可以使用 npm 运行开发服务器的方式使用客户端。
 
+### 便捷启动器
+
+安装包后可以使用启动器自动初始化工作目录、启动内置 Web UI，并默认打开浏览器：
+
+```bash
+neuro-launcher
+```
+
+源码运行时也可以使用仓库内脚本：
+
+```bash
+scripts/start.sh --port 8000
+# Windows PowerShell
+./scripts/start.ps1 --port 8000
+```
+
+如需连接 Official Neuro SDK 兼容客户端，请连接 Neuro Sama 模块的 WebSocket 端点：`ws://<neuro-sama-host>:<port>/ws/neuro-sdk`。该端点支持 `startup`、`context`、`actions/register`、`actions/unregister`、`actions/force` 和 `action/result` 的基础流程。
+
 更多更复杂或者更简单的使用方式，请参见三个部分的详细文档
 
 ## 项目结构（稍微过时，待更新）
@@ -107,7 +125,7 @@ Neuro-Simulator/
           - [ ] 播放音效
         - [ ] 模块化热插拔工具
         - [ ] 连接到 MCP 服务器
-        - [ ] 兼容 Offical [Neuro SDK](https://github.com/VedalAI/neuro-sdk)
+        - [x] 兼容 Offical [Neuro SDK](https://github.com/VedalAI/neuro-sdk)（基础 WebSocket 适配）
     - [ ] 拉起 Evil Agent 并进行对话
   - [ ] Evil Agent 模块，~~卖掉了~~ 待 Neuro Agent 完善、有低成本低性能方法实现 Evil 音色模仿的时候加入
   - [ ] 对 Neuroverse 更多成员的 AI Agent 复现，进而允许 Neuro Agent 向其发送 DM（语音聊天可能不太现实）
@@ -217,7 +235,7 @@ Neuro-Simulator/
       - [ ] 基于 Tauri
       - [ ] 原生
 - Web 控制面板
-  - [ ] 更加便捷的启动器/启动脚本
+  - [x] 更加便捷的启动器/启动脚本
   - [x] 指定服务端 URL 进行连接
   - [x] 直播的开始、停止、重启
   - [x] 配置的查看、编辑、热重载
